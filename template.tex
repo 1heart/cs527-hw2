@@ -1,0 +1,263 @@
+\documentclass{article}
+
+\newif\ifstays
+\staysfalse                  % Change this to \staysfalse to make all sample text disappear
+
+\usepackage{fullpage} % Makes the text margins smaller
+\usepackage{graphicx} % To include figures
+\usepackage{fancyvrb} % Includes the \VerbatimInput command to read in code files
+
+\author{Yixin Lin, Cody Lieu}
+\title{COMPSCI 527 Homework 2}
+
+% A very simple environment for writing pseudo-code
+\newenvironment{pgm}{
+  \begin{center}\begin{tabbing}
+  xx \= xx \= xx \= xx \= xx \= xx \= xx \= xx \= xx \= xx \= xx \= \kill\>\+}{
+  \end{tabbing}\end{center}}
+
+\begin{document}
+\maketitle
+
+
+%%% START OF TEXT TO REMOVE
+\ifstays
+\noindent [Please remove all the extra stuff below from the \verb#.tex# file before you hand in the resulting PDF file. However, please leave section headers and \verb#\newline# commands where they are. It is OK to add \verb#\newline# commands if you find that useful, but do so sparingly.
+
+There are two ways to remove this extra stuff. One is to do so physically (look for matching \texttt{START/END}
+comments), the other is to change the string \verb#\staystrue# close to the beginning of the file to \verb#\staysfalse#
+\fi
+%%% END OF TEXT TO REMOVE
+
+\section*{Problem 1(a)}
+
+\[
+A_0 = \left[\begin{array}{*{4}c}
+ 1 & 0 & 1 \\
+ 0 & 1 & 0 \\
+ 1 & 1 & 0
+ 
+ \end{array}\right]
+\]
+
+
+$$ \mathbf{q_1} = \frac{\mathbf{a_1}}{|\mathbf{a_1}|} =  \left[ \begin{array} {*{3}c} 
+    \frac{1}{\sqrt{2}} \\
+    0 \\
+    \frac{1}{\sqrt{2}} \\
+\end{array}\right]
+$$
+
+$$ \mathbf{q_2} = normalized(\mathbf{a_2} - proj_{\mathbf{q_1}}\mathbf{a2}) =  \left[ \begin{array} {*{3}c} 
+    -\frac{\sqrt{6}}{6} \\
+    \frac{\sqrt{6}}{3} \\
+    \frac{\sqrt{6}}{6} \\
+\end{array}\right]
+$$
+
+$$ \mathbf{q_3} = normalized(\mathbf{a_3} - proj_{\mathbf{q_1}}\mathbf{a3} -
+proj_{\mathbf{q_2}}\mathbf{a3}) =  \left[ \begin{array} {*{3}c} 
+    \frac{\sqrt{3}}{3} \\
+    \frac{\sqrt{3}}{3} \\
+    - \frac{\sqrt{3}}{3} \\
+\end{array}\right]
+$$
+
+\[
+Q = \left[\begin{array}{*{4}c}
+    \frac{1}{\sqrt{2}} & -\frac{\sqrt{6}}{6} & \frac{\sqrt{3}}{3} \\
+    0 & \frac{\sqrt{6}}{3} & \frac{\sqrt{3}}{3} \\
+    \frac{1}{\sqrt{2}} & \frac{\sqrt{6}}{6} & - \frac{\sqrt{3}}{3}
+
+ \end{array}\right]
+\]
+
+
+\section*{Problem 1(b)}
+
+$$|\mathbf{q_1}| = \sqrt{(\frac{1}{\sqrt{2}})^2 +
+    0^2 +
+    (\frac{1}{\sqrt{2}})^2 } = 1$$
+
+$$|\mathbf{q_2}| = \sqrt{(-\frac{\sqrt{6}}{6})^2 +
+    (\frac{\sqrt{6}}{3})^2 +
+    (\frac{\sqrt{6}}{6})^2 } = 1$$
+
+
+$$|\mathbf{q_2}| = \sqrt{(\frac{\sqrt{3}}{3})^2 +
+    (\frac{\sqrt{3}}{3})^2 +
+    (-\frac{\sqrt{3}}{3} } = 1$$
+
+
+$$
+\mathbf{q_1} \cdot \mathbf{q_2} = 
+\left[ \begin{array} {*{3}c} 
+    \frac{1}{\sqrt{2}} \\
+    0 \\
+    \frac{1}{\sqrt{2}} \\
+\end{array}\right] 
+\cdot 
+\left[ \begin{array} {*{3}c} 
+    \frac{\sqrt{3}}{3} \\
+    \frac{\sqrt{3}}{3} \\
+    - \frac{\sqrt{3}}{3} \\
+\end{array}\right]
+= \mathbf{0}
+$$
+
+$$
+\mathbf{q_2} \cdot \mathbf{q_3} = 
+\left[ \begin{array} {*{3}c} 
+    -\frac{\sqrt{6}}{6} \\
+    \frac{\sqrt{6}}{3} \\
+    \frac{\sqrt{6}}{6} \\
+\end{array}\right] 
+\cdot 
+\left[ \begin{array} {*{3}c} 
+    \frac{\sqrt{3}}{3} \\
+    \frac{\sqrt{3}}{3} \\
+    - \frac{\sqrt{3}}{3} \\
+\end{array}\right]
+= \mathbf{0}
+$$
+
+$$
+\mathbf{q_1} \cdot \mathbf{q_3} = 
+\left[ \begin{array} {*{3}c} 
+    \frac{1}{\sqrt{2}} \\
+    0 \\
+    \frac{1}{\sqrt{2}} \\
+\end{array}\right] 
+\cdot 
+\left[ \begin{array} {*{3}c} 
+    \frac{\sqrt{3}}{3} \\
+    \frac{\sqrt{3}}{3} \\
+    - \frac{\sqrt{3}}{3} \\
+\end{array}\right]
+= \mathbf{0}
+$$
+
+\section*{Problem 1(c)}
+
+$r$ is equal to the rank of the matrix $A$.
+
+\section*{Problem 1(d)}
+
+Yes, since Gram-Schmidt gives us an orthogonal basis for the column space, it gives us the dimension of the column space, which is equal to the rank.
+
+\section*{Problem 1(e)}
+
+\section*{Problem 1(f)}
+
+
+$$ r_ij = \mathbf{q_i} \cdot \mathbf{a_j} $$
+
+$$ r_jj = |\mathbf{a_j'}|$$
+
+\section*{Problem 1(g)}
+
+\[
+R = \left[\begin{array}{*{4}c}
+ \ast & \ast  & \ast & \ast\\
+ & \ast & \ast & \ast\\
+ &  & \ast &\ast \\
+ &  &  & \ast
+\end{array}\right]
+\]
+
+%%% START OF TEXT TO REMOVE
+\ifstays
+Here is how you would write the fill pattern for a $4\times 4$ identity matrix:
+\[
+I = \left[\begin{array}{*{4}c}
+ \ast &  &  & \\
+ & \ast &  & \\
+ &  & \ast & \\
+ &  &  & \ast
+\end{array}\right]
+\]
+\fi
+%%% END OF TEXT TO REMOVE
+
+\section*{Problem 1(h)}
+
+\[
+Q = \left[\begin{array}{*{4}c}
+ \mathbf{q_1} & \mathbf{q_2}  & \mathbf{q_3}\\
+\end{array}\right]
+\]
+
+\[
+R = \left[\begin{array}{*{4}c}
+ \ast & \ast  & \ast & \ast\\
+ & \ast & \ast & \ast\\
+ &  &  &\ast  \\
+\end{array}\right]
+\]
+
+In the third iteration of the \verb#for# loop, the \verb#if# statement fails and therefore $r$ is not incremented. The total number of columns in $q$ is $r$, so there is one less column in $Q$. This makes sense, since $Q$ should be an orthogonal matrix whose column space is the same as $A$; if $A$ has linearly dependent vectors, then the number of column vectors in $Q$ will be reduced.
+
+$r_{jj} = |\mathbf{a_j'}| = 0$, so the last element in the diagonal will be 0.
+
+
+\section*{Problem 1(i)}
+
+$$Q_{m \times r}$$
+$$R_{r \times n}$$
+
+\section*{Problem 1(j)}
+
+\section*{Problem 1(k)}
+
+\section*{Problem 2(a)}
+
+$$ \mathbf{c} = Q^{-1}\mathbf{b}$$
+
+\section*{Problem 2(b)}
+
+Since $Q$ is an orthogonal matrix, $Q^{-1} = Q^{T}$. Therefore, we don't require the expensive computation of determining the inverse of $Q$ and can instead take the transpose (which is very efficient).
+
+\section*{Problem 2(c)}
+
+Since $R$ is a triangular matrix, apply the algorithm of backward substitution:
+
+%%% START OF TEXT TO REMOVE
+\ifstays
+Here is one way to render the Gram-Schmidt pseudo-code in \LaTeX. You can use this as a template to write your own pseudo-code.
+\newcommand{\ba}{\mathbf{a}}
+\newcommand{\bq}{\mathbf{q}}
+\begin{pgm}
+\mbox{}\+\+\+\+\\
+$r = 0$\\
+for $j=1$ to $n$\+\\
+$\ba'_{j} = \ba_{j} - \sum_{i=1}^{r} (\bq_{i}^{T}\ba_{j})\bq_{i}$\\
+if $\|\ba'_{j}\| \neq \mathbf{0}$\+\\
+  $r = r+1$\\
+  $\bq_{r} = \frac{\ba'_{j}}{\|\ba'_{j}\|}$\-\\
+end\-\\
+end
+\end{pgm}
+The \verb#\+# and \verb#\-# commands tell the interpreter respectively to add or remove one indentation tab from subsequent lines. The \texttt{pgm} environment is defined for you in the preamble of the \verb#template.tex# file.
+\fi
+%%% END OF TEXT TO REMOVE
+
+\section*{Problem 2(d)}
+
+Since some columns of A are linearly independent, the solution has free variables. In order to pick one solution, pick a free variable at random and then back-sbustitute:
+
+\section*{Problem 2(e)}
+
+\section*{Problem 2(f)}
+
+\section*{Problem 2(g)}
+
+\section*{Problem 2(h)}
+
+\section*{Problem 2(i)}
+
+See next page.
+
+% \input{tests} % Uncomment this line to include your test results, which will show up on a fresh page
+
+
+\end{document}
