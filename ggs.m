@@ -16,4 +16,19 @@ if ~isempty(Q) && size(Q, 2) ~= r0
     error('Q and R have inconsistent sizes')
 end
 
+[qr, qc] = size(Q);
+
 % Your code here
+r = qc;
+for j = 1+qc:n+qc
+    ap = A(:, j-qc);
+    for i = 1:r
+        R(i, j) = dot(Q(:, i), A(:, j-qc));
+        ap = ap - R(i, j).*Q(:, i);
+    end
+    R(j, j) = norm(ap);
+    if R(j, j) > sqrt(eps)
+        r = r + 1;
+        Q(:, r) = ap/R(j, j);
+    end
+end
