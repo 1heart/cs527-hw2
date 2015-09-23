@@ -247,11 +247,26 @@ Since some columns of A are linearly independent, the solution has free variable
 
 \section*{Problem 2(e)}
 
+Since $leftnull(A) = range(A)^{\perp}$, we can find a basis of $R^m$ by using the identity matrix as A and keeping Q and R. Then we remove the vectors that were already in Q to find a basis for the orthogonal complement of $range(A)$.
+
+\begin{verbatim}
+    m = size(Q,1)
+    [Qn, Rn] = ggs(eye(m), Q, R)
+    L = Qn(:, m:)
+\end{verbatim}
+
 \section*{Problem 2(f)}
+
+% Q and R come from ggs; L come from 2e. N and W come from ggs of $A^T$. $x$ can be gotten from 2(a-d).
+% Are there better ways to get N and W?
 
 \section*{Problem 2(g)}
 
+% Rank < m
+
 \section*{Problem 2(h)}
+
+% Check that every inner product between a pair of vectors is 0
 
 \section*{Problem 2(i)}
 
