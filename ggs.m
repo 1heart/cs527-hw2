@@ -26,9 +26,10 @@ for j = 1+qc:n+qc
         R(i, j) = dot(Q(:, i), A(:, j-qc));
         ap = ap - R(i, j).*Q(:, i);
     end
-    R(j, j) = norm(ap);
-    if R(j, j) > sqrt(eps)
+    rjj = norm(ap);
+    if rjj > sqrt(eps)
         r = r + 1;
-        Q(:, r) = ap/R(j, j);
+        R(j,j) = rjj;
+        Q(:, r) = ap/rjj;
     end
 end
