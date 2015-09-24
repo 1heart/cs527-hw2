@@ -3,12 +3,16 @@
 \newcommand{\itab}[1]{\hspace{0em}\rlap{#1}}
 \newcommand{\tab}[1]{\hspace{.05\textwidth}\rlap{#1}}
 
+
 \newif\ifstays
 \staysfalse                  % Change this to \staysfalse to make all sample text disappear
 
 \usepackage{fullpage} % Makes the text margins smaller
 \usepackage{graphicx} % To include figures
 \usepackage{fancyvrb} % Includes the \VerbatimInput command to read in code files
+
+\usepackage{url}
+\usepackage{hyperref}
 
 \author{Yixin Lin, Cody Lieu}
 \title{COMPSCI 527 Homework 2}
@@ -146,7 +150,7 @@ $r$ is equal to the rank of the matrix $A$.
 
 \section*{Problem 1(d)}
 
-Yes, since Gram-Schmidt gives us an orthogonal basis for the column space, it gives us the dimension of the column space, which is equal to the rank.
+Yes, since Gram-Schmidt gives us an orthogonal basis for the column space when applied to the column vectors in $A$, it gives us the dimension of the column space, which is equal to the rank.
 
 \section*{Problem 1(e)}
 
@@ -155,9 +159,9 @@ $Q$ forms a basis for the vector space $A$. This means that if a solution exists
 \section*{Problem 1(f)}
 
 
-$$ r_ij = \mathbf{q_i} \cdot \mathbf{a_j} $$
+$$ r_{ij} = \mathbf{q_i} \cdot \mathbf{a_j} $$
 
-$$ r_jj = |\mathbf{a_j'}|$$
+$$ r_{jj} = |\mathbf{a_j'}|$$
 
 \section*{Problem 1(g)}
 
@@ -211,11 +215,71 @@ $$R_{r \times n}$$
 
 \section*{Problem 1(j)}
 
+\begin{verbatim}
+function [Q, R] = gs(A)
+
+Q = [];
+R = [];
+
+r = 0;
+for j = 1:size(A, 2)
+    ap = A(:, j);
+    for i = 1:r
+        R(i, j) = dot(Q(:, i), A(:, j));
+        ap = ap - R(i, j).*Q(:, i);
+    end
+    rjj = norm(ap);
+    if rjj > sqrt(eps)
+        r = r + 1;
+        R(j,j) = rjj;
+        Q(:, r) = ap/rjj;
+    end
+end
+\end{verbatim}
+
 \section*{Problem 1(k)}
+
+\begin{verbatim}
+function [Q, R] = ggs(A, Q, R)
+
+if nargin < 3 || isempty(Q) || isempty(R)
+    Q = [];
+    R = [];
+end
+
+[m, n] = size(A);
+[r0, n0] = size(R);
+
+if ~isempty(Q) && size(Q, 1) ~= m
+    error('A and Q have inconsistent row sizes')
+end
+
+if ~isempty(Q) && size(Q, 2) ~= r0
+    error('Q and R have inconsistent sizes')
+end
+
+[qr, qc] = size(Q);
+
+% Your code here
+r = qc;
+for j = 1+qc:n+qc
+    ap = A(:, j-qc);
+    for i = 1:r
+        R(i, j) = dot(Q(:, i), A(:, j-qc));
+        ap = ap - R(i, j).*Q(:, i);
+    end
+    rjj = norm(ap);
+    if rjj > sqrt(eps)
+        r = r + 1;
+        R(j,j) = rjj;
+        Q(:, r) = ap/rjj;
+    end
+end
+\end{verbatim}
 
 \section*{Problem 2(a)}
 
-$$ \mathbf{c} = Q^{-1}\mathbf{b}$$
+$$ \mathbf{c} = Q^{-1}\mathbf{b} = Q^{T}\mathbf{b}$$
 
 \section*{Problem 2(b)}
 
@@ -260,16 +324,16 @@ The \verb#\+# and \verb#\-# commands tell the interpreter respectively to add or
 
 \section*{Problem 2(d)}
 
-Since some columns of A are linearly independent, the solution has free variables. In order to pick one solution, pick a free variable at random and then back-sbustitute:
+Since some columns of A are linearly independent, the solution has free variables. In order to pick one solution, pick a free variable at random and then back-substitute:
 
 \section*{Problem 2(e)}
 
 Since $leftnull(A) = range(A)^{\perp}$, we can find a basis of $R^m$ by using the identity matrix as A and keeping Q and R. Then we remove the vectors that were already in Q to find a basis for the orthogonal complement of $range(A)$.
 
 \begin{verbatim}
-    m = size(Q,1)
-    [Qn, Rn] = ggs(eye(m), Q, R)
-    L = Qn(:, m:)
+[m, n] = size(Q);
+[Qn, Rn] = ggs(eye(m), Q, R);
+L = Qn(:, n+1:end);
 \end{verbatim}
 
 \section*{Problem 2(f)}
@@ -280,11 +344,24 @@ Since $leftnull(A) = range(A)^{\perp}$, we can find a basis of $R^m$ by using th
 \section*{Problem 2(g)}
 
 % Rank < n
-The system in eq. 3 admits infinitely many solutions if the rank of R is less than the number of columns in A. In this case, the set of solutions to the system $R\mathbf{x}=\mathbf{c}$ can be defined precisely by the space spanned by null(A). null(A) is a vector space.
+The system in eq. 3 admits infinitely many solutions if the rank of A is less than the number of columns in A (i.e. \verb#size(Q,2) < size(A,2)#) and x exists (i.e. \verb#x~=[]#).
+
+The set of solutions is $ \mathbf{n} + \mathbf{x}$, $ \forall n \in N $. This is the set of vectors in $N$, shifted by $\mathbf{x}$, which is an \textbf{affine space}.
+
+This is true because of the following theorem, taken verbatim from \href{https://www.math.stonybrook.edu/~badger/mat211f12/solver2.pdf}{this link from Stony Brook}:
+
+\subsubsection*{Theorem}
+
+Let $x_p$ be a $particular $ $solution$ to $Ax = b$. Then the $general$ $ solution$ to $Ax = b$ is given by $x_p + x_n$ where $x_n$ is a vector in the nullspace of $A$.
+
+
+% In this case, the set of solutions to the system $R\mathbf{x}=\mathbf{c}$ can be defined precisely by the space spanned by null(A). null(A) is a vector space.
 
 \section*{Problem 2(h)}
 
 % Check that every inner product between a pair of vectors is 0
+
+Check that $\mathbf{n} \cdot \mathbf{w} = \mathbf{0}$ $ \forall \mathbf{n} \in N$, $ \forall \mathbf{w} \in W$. Equivalently, \verb#~any(N.' * W)  # (Replace N and W with L and Q respectively, to check for L and Q.)
 
 \section*{Problem 2(i)}
 
