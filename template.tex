@@ -1,5 +1,8 @@
 \documentclass{article}
 
+\newcommand{\itab}[1]{\hspace{0em}\rlap{#1}}
+\newcommand{\tab}[1]{\hspace{.05\textwidth}\rlap{#1}}
+
 \newif\ifstays
 \staysfalse                  % Change this to \staysfalse to make all sample text disappear
 
@@ -147,6 +150,8 @@ Yes, since Gram-Schmidt gives us an orthogonal basis for the column space, it gi
 
 \section*{Problem 1(e)}
 
+$Q$ forms a basis for the vector space $A$. This means that if a solution exists to $A\mathbf{x}=\mathbf{b}$, then $\mathbf{b}$ can be expressed as a linear combination of the orthonormal vectors in $Q$, i.e. if a solution exists to the linear system $Q\mathbf{x'}=\mathbf{b}$, where $\mathbf{x'}$ is a r-by-1 vector of constants (not necessarily satisfying $A\mathbf{x}=\mathbf{b}$), then a solution exists to $A\mathbf{x}=\mathbf{b}$.
+
 \section*{Problem 1(f)}
 
 
@@ -199,7 +204,6 @@ In the third iteration of the \verb#for# loop, the \verb#if# statement fails and
 
 $r_{jj} = |\mathbf{a_j'}| = 0$, so the last element in the diagonal will be 0.
 
-
 \section*{Problem 1(i)}
 
 $$Q_{m \times r}$$
@@ -219,7 +223,20 @@ Since $Q$ is an orthogonal matrix, $Q^{-1} = Q^{T}$. Therefore, we don't require
 
 \section*{Problem 2(c)}
 
-Since $R$ is a triangular matrix, apply the algorithm of backward substitution:
+Since $R$ is a triangular matrix, apply the algorithm of backward substitution pseudo-coded below:\\\\
+x = new arr[n]\\
+for i = n to 1
+
+\itab{x[i] = c[i]}
+
+\itab{for j = i + 1 to n}
+
+\tab{x[i] = x[i] - x[j] * R[i][j]}
+
+\itab{end}
+
+\itab{x[i] = x[i] / R[i][i]}\\
+end
 
 %%% START OF TEXT TO REMOVE
 \ifstays
@@ -262,7 +279,8 @@ Since $leftnull(A) = range(A)^{\perp}$, we can find a basis of $R^m$ by using th
 
 \section*{Problem 2(g)}
 
-% Rank < m
+% Rank < n
+The system in eq. 3 admits infinitely many solutions if the rank of R is less than the number of columns in A. In this case, the set of solutions to the system $R\mathbf{x}=\mathbf{c}$ can be defined precisely by the space spanned by null(A). null(A) is a vector space.
 
 \section*{Problem 2(h)}
 
