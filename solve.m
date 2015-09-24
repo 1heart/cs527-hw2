@@ -13,6 +13,9 @@ L = Qn(:, n+1:end);
 [Qw, Rw] = ggs(eye(r), W, Rw);
 N = Qw(:, col+1:end);
 
+Q
+b
+
 c = Q'*b;
 
 pivotColumns = [];
@@ -24,34 +27,27 @@ for rC = 1:size(R, 2)
         end
     end
 end
-cR = size(R, 2);
-i = cR;
-x = zeros(i,1);
-while i > 0
-    if ismember(i,pivotColumns)
-        x(i) = c(i);
-        for j = i+1:cR
-            x(i) = x(i) - x(j)*R(i, j);
-        end
-        x(i) = x(i)/R(i, i);
-    else
-        x(i) = 0;
-    end
-    i = i-1;
-end
 
-% i = n
-% while i > 0
-%     curNumVariables = sum(arrayfun(@(x) abs(x) > sqrt(eps), R(n,:)));
-%     expectedNumVariables = n-i+1;
-%     diff = curNumVariables - expectedNumVariables;
-%     i = i - diff;
-%     x(i) = b(i);
-%     for j = i+1:n
-%         x(i) = x(i) - x(j)*R(i, j);
-%     end
-%     x(i) = x(i)/R(i, i);
-%     i = i-1;
-% end
+
+[Qb, Rb] = ggs(b, Q, R)
+if ~isequal(Qb, Q)
+    x = []
+else
+    cR = size(R, 2);
+    i = cR;
+    x = zeros(i,1);
+    while i > 0
+        if ismember(i,pivotColumns)
+            x(i) = c(i);
+            for j = i+1:cR
+                x(i) = x(i) - x(j)*R(i, j);
+            end
+            x(i) = x(i)/R(i, i);
+        else
+            x(i) = 0;
+        end
+        i = i-1;
+    end
+end
 
 end

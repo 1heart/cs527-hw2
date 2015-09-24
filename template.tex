@@ -49,9 +49,9 @@ A_0 = \left[\begin{array}{*{4}c}
 
 
 $$ \mathbf{q_1} = \frac{\mathbf{a_1}}{|\mathbf{a_1}|} =  \left[ \begin{array} {*{3}c} 
-    \frac{1}{\sqrt{2}} \\
+    \frac{\sqrt{2}}{2} \\
     0 \\
-    \frac{1}{\sqrt{2}} \\
+    \frac{\sqrt{2}}{2} \\
 \end{array}\right]
 $$
 
@@ -72,9 +72,9 @@ $$
 
 \[
 Q = \left[\begin{array}{*{4}c}
-    \frac{1}{\sqrt{2}} & -\frac{\sqrt{6}}{6} & \frac{\sqrt{3}}{3} \\
+    \frac{\sqrt{2}}{2} & -\frac{\sqrt{6}}{6} & \frac{\sqrt{3}}{3} \\
     0 & \frac{\sqrt{6}}{3} & \frac{\sqrt{3}}{3} \\
-    \frac{1}{\sqrt{2}} & \frac{\sqrt{6}}{6} & - \frac{\sqrt{3}}{3}
+    \frac{\sqrt{2}}{2} & \frac{\sqrt{6}}{6} & - \frac{\sqrt{3}}{3}
 
  \end{array}\right]
 \]
@@ -82,9 +82,9 @@ Q = \left[\begin{array}{*{4}c}
 
 \section*{Problem 1(b)}
 
-$$|\mathbf{q_1}| = \sqrt{(\frac{1}{\sqrt{2}})^2 +
+$$|\mathbf{q_1}| = \sqrt{(\frac{\sqrt{2}}{2})^2 +
     0^2 +
-    (\frac{1}{\sqrt{2}})^2 } = 1$$
+    (\frac{\sqrt{2}}{2})^2 } = 1$$
 
 $$|\mathbf{q_2}| = \sqrt{(-\frac{\sqrt{6}}{6})^2 +
     (\frac{\sqrt{6}}{3})^2 +
@@ -99,9 +99,9 @@ $$|\mathbf{q_2}| = \sqrt{(\frac{\sqrt{3}}{3})^2 +
 $$
 \mathbf{q_1} \cdot \mathbf{q_2} = 
 \left[ \begin{array} {*{3}c} 
-    \frac{1}{\sqrt{2}} \\
+    \frac{\sqrt{2}}{2} \\
     0 \\
-    \frac{1}{\sqrt{2}} \\
+    \frac{\sqrt{2}}{2} \\
 \end{array}\right] 
 \cdot 
 \left[ \begin{array} {*{3}c} 
@@ -131,9 +131,9 @@ $$
 $$
 \mathbf{q_1} \cdot \mathbf{q_3} = 
 \left[ \begin{array} {*{3}c} 
-    \frac{1}{\sqrt{2}} \\
+    \frac{\sqrt{2}}{2} \\
     0 \\
-    \frac{1}{\sqrt{2}} \\
+    \frac{\sqrt{2}}{2} \\
 \end{array}\right] 
 \cdot 
 \left[ \begin{array} {*{3}c} 
@@ -233,7 +233,7 @@ for j = 1:size(A, 2)
     rjj = norm(ap);
     if rjj > sqrt(eps)
         r = r + 1;
-        R(j,j) = rjj;
+        R(r,j) = rjj;
         Q(:, r) = ap/rjj;
     end
 end
@@ -273,7 +273,7 @@ for j = 1+qc:n+qc
     rjj = norm(ap);
     if rjj > sqrt(eps)
         r = r + 1;
-        R(j,j) = rjj;
+        R(r,j) = rjj;
         Q(:, r) = ap/rjj;
     end
 end
@@ -289,20 +289,32 @@ Since $Q$ is an orthogonal matrix, $Q^{-1} = Q^{T}$. Therefore, we don't require
 
 \section*{Problem 2(c)}
 
-Since $R$ is a triangular matrix, apply the algorithm of backward substitution pseudo-coded below:\\\\
-x = new arr[n]\\
-for i = n to 1
+Since $R$ is a triangular matrix, apply the algorithm of backward substitution pseudo-coded below:
+%\\\\
+% x = new arr[n]\\
+% for i = n to 1
 
-\itab{x[i] = c[i]}
+% \itab{x[i] = c[i]}
 
-\itab{for j = i + 1 to n}
+% \itab{for j = i + 1 to n}
 
-\tab{x[i] = x[i] - x[j] * R[i][j]}
+% \tab{x[i] = x[i] - x[j] * R[i][j]}
 
-\itab{end}
+% \itab{end}
 
-\itab{x[i] = x[i] / R[i][i]}\\
+% \itab{x[i] = x[i] / R[i][i]}\\
+% end
+
+\begin{verbatim}
+x = zeros(i,1);
+for i = n:-1:1
+    x(i) = c(i);
+    for j = i+1:cR
+        x(i) = x(i) - x(j)*R(i, j);
+    end
+    x(i) = x(i)/R(i, i);
 end
+\end{verbatim}
 
 %%% START OF TEXT TO REMOVE
 \ifstays
@@ -326,11 +338,44 @@ The \verb#\+# and \verb#\-# commands tell the interpreter respectively to add or
 
 \section*{Problem 2(d)}
 
-Since some columns of A are linearly independent, the solution has free variables. In order to pick one solution, pick a free variable at random and then back-substitute:
+Since some columns of A are linearly independent, the solution has free variables. In order to pick one solution, pick a free variable at random and then back-substitute.
+
+In the code below, we first compute the pivot columns (which are fixed), and we set the free variables to 0. We check if we're on a free column, and if we are we simply ignore it.
+
+\begin{verbatim}
+
+pivotColumns = [];
+for rC = 1:size(R, 2)
+    for rR = rC:size(R, 1)
+        if abs(R(rR,rC)) > sqrt(eps)
+            pivotColumns = [pivotColumns rC];
+            break;
+        end
+    end
+end
+cR = size(R, 2);
+i = cR;
+x = zeros(i,1);
+while i > 0
+    if ismember(i,pivotColumns)
+        x(i) = c(i);
+        for j = i+1:cR
+            x(i) = x(i) - x(j)*R(i, j);
+        end
+        x(i) = x(i)/R(i, i);
+    else
+        x(i) = 0;
+    end
+    i = i-1;
+end
+
+\end{verbatim}
 
 \section*{Problem 2(e)}
 
 Since $leftnull(A) = range(A)^{\perp}$, we can find a basis of $R^m$ by using the identity matrix as A and keeping Q and R. Then we remove the vectors that were already in Q to find a basis for the orthogonal complement of $range(A)$.
+
+This works because we know that the identity matrix of size m is definitely a basis for $R^M$, so using \verb#ggs# on it allows us to definitely get a basis of $R^M$ by adding vectors onto $Q$.
 
 \begin{verbatim}
 [m, n] = size(Q);
@@ -343,6 +388,62 @@ L = Qn(:, n+1:end);
 % Q and R come from ggs; L come from 2e. N and W come from ggs of $A^T$. $x$ can be gotten from 2(a-d).
 % Are there better ways to get N and W?
 
+\begin{verbatim}
+function [x, N, W, L, Q, R] = solve(A, b)
+
+[Q, R] = ggs(A, [], []);
+
+[m, n] = size(Q);
+[Qn, Rn] = ggs(eye(m), Q, R);
+L = Qn(:, n+1:end);
+
+
+[W, Rw] = ggs(A', [], []);
+
+[r, col] = size(W);
+[Qw, Rw] = ggs(eye(r), W, Rw);
+N = Qw(:, col+1:end);
+
+Q
+b
+
+c = Q'*b;
+
+pivotColumns = [];
+for rC = 1:size(R, 2)
+    for rR = rC:size(R, 1)
+        if abs(R(rR,rC)) > sqrt(eps)
+            pivotColumns = [pivotColumns rC];
+            break;
+        end
+    end
+end
+
+
+[Qb, Rb] = ggs(b, Q, R)
+if ~isequal(Qb, Q)
+    x = []
+else
+    cR = size(R, 2);
+    i = cR;
+    x = zeros(i,1);
+    while i > 0
+        if ismember(i,pivotColumns)
+            x(i) = c(i);
+            for j = i+1:cR
+                x(i) = x(i) - x(j)*R(i, j);
+            end
+            x(i) = x(i)/R(i, i);
+        else
+            x(i) = 0;
+        end
+        i = i-1;
+    end
+end
+
+end
+\end{verbatim}
+
 \section*{Problem 2(g)}
 
 % Rank < n
@@ -350,7 +451,7 @@ The system in eq. 3 admits infinitely many solutions if the rank of A is less th
 
 The set of solutions is $ \mathbf{n} + \mathbf{x}$, $ \forall n \in N $. This is the set of vectors in $N$, shifted by $\mathbf{x}$, which is an \textbf{affine space}.
 
-This is true because of the following theorem, taken verbatim from \href{https://www.math.stonybrook.edu/~badger/mat211f12/solver2.pdf}{this link from Stony Brook}:
+This is true because of the following theorem, taken verbatim from \textbf{\href{https://www.math.stonybrook.edu/~badger/mat211f12/solver2.pdf}{this link from Stony Brook}}:
 
 \subsubsection*{Theorem}
 
