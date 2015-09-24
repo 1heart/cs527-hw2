@@ -29,7 +29,7 @@ for j = 1+qc:n+qc
     rjj = norm(ap);
     if rjj > sqrt(eps)
         r = r + 1;
-        R(j,j) = rjj;
+        R(r,j) = rjj;
         Q(:, r) = ap/rjj;
     end
 end

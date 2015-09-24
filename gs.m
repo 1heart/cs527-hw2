@@ -13,7 +13,7 @@ for j = 1:size(A, 2)
     rjj = norm(ap);
     if rjj > sqrt(eps)
         r = r + 1;
-        R(j,j) = rjj;
+        R(r,j) = rjj;
         Q(:, r) = ap/rjj;
     end
 end

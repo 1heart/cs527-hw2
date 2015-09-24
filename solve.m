@@ -13,7 +13,7 @@ L = Qn(:, n+1:end);
 [Qw, Rw] = ggs(eye(r), W, Rw);
 N = Qw(:, col+1:end);
 
-c = Q*b';
+c = Q'*b;
 
 pivotColumns = [];
 for rC = 1:size(R, 2)
@@ -24,16 +24,20 @@ for rC = 1:size(R, 2)
         end
     end
 end
-i = n;
+cR = size(R, 2);
+i = cR;
+x = zeros(i,1);
 while i > 0
     if ismember(i,pivotColumns)
         x(i) = c(i);
-        for j = i+1:n
+        for j = i+1:cR
             x(i) = x(i) - x(j)*R(i, j);
         end
         x(i) = x(i)/R(i, i);
-        i = i-1;
+    else
+        x(i) = 0;
     end
+    i = i-1;
 end
 
 % i = n
