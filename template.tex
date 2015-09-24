@@ -154,7 +154,9 @@ Yes, since Gram-Schmidt gives us an orthogonal basis for the column space when a
 
 \section*{Problem 1(e)}
 
-$Q$ forms a basis for the vector space $A$. This means that if a solution exists to $A\mathbf{x}=\mathbf{b}$, then $\mathbf{b}$ can be expressed as a linear combination of the orthonormal vectors in $Q$, i.e. if a solution exists to the linear system $Q\mathbf{x'}=\mathbf{b}$, where $\mathbf{x'}$ is a r-by-1 vector of constants (not necessarily satisfying $A\mathbf{x}=\mathbf{b}$), then a solution exists to $A\mathbf{x}=\mathbf{b}$.
+First, apply Gram-Schmidt on the set of column vectors of A; then add $\mathbf{b}$ to the set and continue. If adding $\mathbf{b}$ increased the number of orthogonormal vectors, that means there is no solution (i.e. there is no linear combination of basis vectors of the column space of A that equals $\mathbf{b}$). Otherwise, $\mathbf{b}$ is a linear combination of the column vectors of A, and there exists a solution.
+
+% $Q$ forms a basis for the vector space $A$. This means that if a solution exists to $A\mathbf{x}=\mathbf{b}$, then $\mathbf{b}$ can be expressed as a linear combination of the orthonormal vectors in $Q$, i.e. if a solution exists to the linear system $Q\mathbf{x'}=\mathbf{b}$, where $\mathbf{x'}$ is a r-by-1 vector of constants (not necessarily satisfying $A\mathbf{x}=\mathbf{b}$), then a solution exists to $A\mathbf{x}=\mathbf{b}$.
 
 \section*{Problem 1(f)}
 
